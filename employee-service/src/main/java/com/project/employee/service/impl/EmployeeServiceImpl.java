@@ -2,7 +2,7 @@ package com.project.employee.service.impl;
 
 import com.project.domain.dto.EmployeeDto;
 import com.project.domain.entity.Employee;
-import com.project.domain.exception.DuplicateEmailException;
+import com.project.domain.exception.EmailAlreadyExistsException;
 import com.project.domain.exception.ResourceNotFoundException;
 import com.project.domain.mapper.EmployeeMapper;
 import com.project.employee.repository.EmployeeRepository;
@@ -27,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
         // Check if the email already exists
         if (employeeRepository.existsByEmail(employeeDto.getEmail())) {
-            throw new DuplicateEmailException("Email already exists: " + employeeDto.getEmail());
+            throw new EmailAlreadyExistsException("Email already exists: " + employeeDto.getEmail());
         }
 
         Employee employee = EmployeeMapper.toEntity(employeeDto);
@@ -49,6 +49,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeOptional.orElseThrow(() ->
                 new ResourceNotFoundException("Employee not found with id: " + id));
         return EmployeeMapper.toDto(employee);
+    }
+
+    @Override
+    public EmployeeDto updateEmployee(Long id, EmployeeDto employeeDto) {
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
+        Employee employee = employeeOptional.orElseThrow(() ->
+                new ResourceNotFoundException("Employee not found with id: " + id));
+        employee.setFirstName(employeeDto.getFirstName());
+        employee.setLastName(employeeDto.getLastName());
+        employee.setEmail(employeeDto.getEmail());
+        Employee updatedEmployee = employeeRepository.save(employee);
+        return EmployeeMapper.toDto(updatedEmployee);
     }
 
     @Override

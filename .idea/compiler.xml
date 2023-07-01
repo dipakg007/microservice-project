@@ -7,8 +7,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="department-service" />
         <module name="domain-service" />
+        <module name="department-service" />
+        <module name="service-registry" />
         <module name="employee-service" />
       </profile>
     </annotationProcessing>
@@ -18,6 +19,7 @@
       <module name="department-service" options="-parameters" />
       <module name="domain-service" options="-parameters" />
       <module name="employee-service" options="-parameters" />
+      <module name="service-registry" options="-parameters" />
     </option>
   </component>
 </project>

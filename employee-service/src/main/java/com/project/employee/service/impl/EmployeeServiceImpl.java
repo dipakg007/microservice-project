@@ -8,6 +8,7 @@ import com.project.domain.exception.EmailAlreadyExistsException;
 import com.project.domain.exception.ResourceNotFoundException;
 import com.project.domain.mapper.EmployeeMapper;
 import com.project.employee.repository.EmployeeRepository;
+import com.project.employee.service.DepartmentServiceProxy;
 import com.project.employee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private WebClient webClient;
+    private DepartmentServiceProxy departmentServiceProxy;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
@@ -52,7 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
         Employee employee = employeeOptional.orElseThrow(() ->
                 new ResourceNotFoundException("Employee not found with id: " + id));
-        DepartmentDto departmentDto = webClient.get().uri("http://localhost:8080/api/departments/departmentCode/" + employee.getDepartmentCode()).retrieve().bodyToMono(DepartmentDto.class).block();
+        DepartmentDto departmentDto = departmentServiceProxy.getDepartmentByCode(employee.getDepartmentCode());
         APIResponseDto apiResponseDto = new APIResponseDto();
         apiResponseDto.setDepartmentDto(departmentDto);
         apiResponseDto.setEmployeeDto(EmployeeMapper.toDto(employee));

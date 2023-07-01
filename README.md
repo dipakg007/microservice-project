@@ -1,4 +1,4 @@
-# Awesome Microservices Project
+# Microservices Project
 
 Welcome to the Awesome Microservices Project, a cutting-edge Spring Boot and Spring Cloud-based solution for building highly scalable and resilient microservices architectures.
 
@@ -28,3 +28,21 @@ To get started with the Awesome Microservices Project, follow the instructions b
 
    ```shell
    git clone https://github.com/dipakg007/microservice-project.git
+
+2. Create database in MySql database by using the below Script
+   ```shell
+   create database microservice;
+   
+3. Go to application.properties file of both department and employee services and replace the below properties
+   ```shell
+   spring.datasource.username=<your_database_username>
+   spring.datasource.password=<your_database_password>
+
+4. Then run the below files
+   ```
+   DepartmentServiceApplication
+   EmployeeServiceApplication
+   ServiceRegistryApplication
+
+5. 
+   

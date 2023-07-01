@@ -43,6 +43,4 @@ To get started with the Awesome Microservices Project, follow the instructions b
    DepartmentServiceApplication
    EmployeeServiceApplication
    ServiceRegistryApplication
-
-5. 
    

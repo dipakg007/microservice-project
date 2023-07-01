@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private WebClient webClient;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
@@ -51,8 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
         Employee employee = employeeOptional.orElseThrow(() ->
                 new ResourceNotFoundException("Employee not found with id: " + id));
-        ResponseEntity<DepartmentDto> responseEntity = restTemplate.getForEntity("http://localhost:8080/api/departments/departmentCode/" + employee.getDepartmentCode(), DepartmentDto.class);
-        DepartmentDto departmentDto =responseEntity.getBody();
+        DepartmentDto departmentDto = webClient.get().uri("http://localhost:8080/api/departments/departmentCode/" + employee.getDepartmentCode()).retrieve().bodyToMono(DepartmentDto.class).block();
         APIResponseDto apiResponseDto = new APIResponseDto();
         apiResponseDto.setDepartmentDto(departmentDto);
         apiResponseDto.setEmployeeDto(EmployeeMapper.toDto(employee));

@@ -1,5 +1,7 @@
 package com.project.employee.service.impl;
 
+import com.project.domain.dto.APIResponseDto;
+import com.project.domain.dto.DepartmentDto;
 import com.project.domain.dto.EmployeeDto;
 import com.project.domain.entity.Employee;
 import com.project.domain.exception.EmailAlreadyExistsException;
@@ -8,7 +10,9 @@ import com.project.domain.mapper.EmployeeMapper;
 import com.project.employee.repository.EmployeeRepository;
 import com.project.employee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +20,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private final EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+    private RestTemplate restTemplate;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
@@ -44,11 +47,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDto getEmployeeById(Long id) {
+    public APIResponseDto getEmployeeById(Long id) {
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
         Employee employee = employeeOptional.orElseThrow(() ->
                 new ResourceNotFoundException("Employee not found with id: " + id));
-        return EmployeeMapper.toDto(employee);
+        ResponseEntity<DepartmentDto> responseEntity = restTemplate.getForEntity("http://localhost:8080/api/departments/departmentCode/" + employee.getDepartmentCode(), DepartmentDto.class);
+        DepartmentDto departmentDto =responseEntity.getBody();
+        APIResponseDto apiResponseDto = new APIResponseDto();
+        apiResponseDto.setDepartmentDto(departmentDto);
+        apiResponseDto.setEmployeeDto(EmployeeMapper.toDto(employee));
+
+        return apiResponseDto;
     }
 
     @Override
@@ -59,6 +68,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setFirstName(employeeDto.getFirstName());
         employee.setLastName(employeeDto.getLastName());
         employee.setEmail(employeeDto.getEmail());
+        employee.setDepartmentCode(employeeDto.getDepartmentCode());
         Employee updatedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.toDto(updatedEmployee);
     }

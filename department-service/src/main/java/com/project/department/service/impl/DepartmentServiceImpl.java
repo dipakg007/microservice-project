@@ -63,6 +63,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         departmentRepository.deleteById(id);
     }
+
+    @Override
+    public DepartmentDto getDepartmentByCode(String departmentCode) {
+        Optional<Department> optionalDepartment = departmentRepository.findByDepartmentCode(departmentCode);
+        Department department = optionalDepartment.orElseThrow(() -> new ResourceNotFoundException("Department not found with Department Code: " + departmentCode));
+        return DepartmentMapper.toDto(department);
+    }
 }
 
 

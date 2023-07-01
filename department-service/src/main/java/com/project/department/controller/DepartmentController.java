@@ -56,6 +56,15 @@ public class DepartmentController {
         departmentService.deleteDepartment(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/departmentCode/{departmentCode}")
+    public ResponseEntity<DepartmentDto> getDepartmentByCode(@PathVariable String departmentCode) {
+        DepartmentDto departmentDto = departmentService.getDepartmentByCode(departmentCode);
+        if (departmentDto == null) {
+            throw new ResourceNotFoundException("Department not found with Department Code: " + departmentCode);
+        }
+        return ResponseEntity.ok(departmentDto);
+    }
 }
 
 

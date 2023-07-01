@@ -1,5 +1,6 @@
 package com.project.employee.controller;
 
+import com.project.domain.dto.APIResponseDto;
 import com.project.domain.dto.EmployeeDto;
 import com.project.domain.exception.ResourceNotFoundException;
 import com.project.employee.service.EmployeeService;
@@ -33,9 +34,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
-        EmployeeDto employee = employeeService.getEmployeeById(id);
-        return ResponseEntity.ok(employee);
+    public ResponseEntity<APIResponseDto> getEmployeeById(@PathVariable Long id) {
+        APIResponseDto apiResponseDto = employeeService.getEmployeeById(id);
+        return ResponseEntity.ok(apiResponseDto);
     }
 
     @PutMapping("/{id}")

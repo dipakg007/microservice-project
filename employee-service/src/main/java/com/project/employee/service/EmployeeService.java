@@ -1,5 +1,6 @@
 package com.project.employee.service;
 
+import com.project.domain.dto.APIResponseDto;
 import com.project.domain.dto.EmployeeDto;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface EmployeeService {
 
     List<EmployeeDto> getAllEmployees();
 
-    EmployeeDto getEmployeeById(Long id);
+    APIResponseDto getEmployeeById(Long id);
 
     EmployeeDto updateEmployee(Long id, EmployeeDto employeeDto);
 
